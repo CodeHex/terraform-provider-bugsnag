@@ -1,0 +1,7 @@
+# Terraform
+.terraform/
+*.tfplan
+*tfstate*
+terraform-provider-bugsnag
+*.tf
+crash.log
