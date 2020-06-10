@@ -13,7 +13,7 @@ func resourceProject() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {Type: schema.TypeString, Required: true},
-			"type": {Type: schema.TypeString, Required: true},
+			"type": {Type: schema.TypeString, Required: true, ForceNew: true},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -45,6 +45,8 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	// The type of project is not available on the API, so assume the state is correct
 	err = d.Set("type", d.State().Attributes["type"])
 	if err != nil {
 		return err
@@ -53,7 +55,18 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	d.SetId("")
+	c := m.(*Client)
+	project := &APIProject{
+		ID: d.Id(),
+	}
+
+	if d.HasChange("name") {
+		project.Name = d.Get("name").(string)
+	}
+	_, err := c.UpdateProject(project)
+	if err != nil {
+		return err
+	}
 	return resourceProjectRead(d, m)
 }
 

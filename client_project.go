@@ -35,3 +35,14 @@ func (c *Client) CreateProject(project *APIProject) (*APIProject, error) {
 func (c *Client) DeleteProject(id string) error {
 	return c.callAPI(http.MethodDelete, fmt.Sprintf(getProjectPath, id), nil, nil, http.StatusNoContent)
 }
+
+func (c *Client) UpdateProject(project *APIProject) (*APIProject, error) {
+	body, err := json.Marshal(project)
+	if err != nil {
+		return nil, err
+	}
+
+	var updatedProject APIProject
+	err = c.callAPI(http.MethodPatch, fmt.Sprintf(getProjectPath, project.ID), body, &updatedProject, http.StatusOK)
+	return &updatedProject, err
+}
