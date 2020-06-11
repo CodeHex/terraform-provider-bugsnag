@@ -12,8 +12,14 @@ func resourceProject() *schema.Resource {
 		Delete: resourceProjectDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name": {Type: schema.TypeString, Required: true},
-			"type": {Type: schema.TypeString, Required: true, ForceNew: true},
+			"name":       {Type: schema.TypeString, Required: true},
+			"type":       {Type: schema.TypeString, Required: true, ForceNew: true},
+			"api_key":    {Type: schema.TypeString, Computed: true},
+			"slug":       {Type: schema.TypeString, Computed: true},
+			"url":        {Type: schema.TypeString, Computed: true},
+			"html_url":   {Type: schema.TypeString, Computed: true},
+			"created_at": {Type: schema.TypeString, Computed: true},
+			"updated_at": {Type: schema.TypeString, Computed: true},
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -41,13 +47,30 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = d.Set("name", project.Name)
-	if err != nil {
-		return err
+
+	fields := map[string]string{
+		"name":       project.Name,
+		"api_key":    project.APIKey,
+		"slug":       project.Slug,
+		"url":        project.URL,
+		"html_url":   project.HTMLURL,
+		"created_at": project.CreatedAt,
+		"updated_at": project.UpdatedAt,
+	}
+
+	for field, val := range fields {
+		err = d.Set(field, val)
+		if err != nil {
+			return err
+		}
 	}
 
 	// The type of project is not available on the API, so assume the state is correct
-	err = d.Set("type", d.State().Attributes["type"])
+	typeData := d.State().Attributes["type"]
+	if typeData == "" {
+		typeData = "other"
+	}
+	err = d.Set("type", typeData)
 	if err != nil {
 		return err
 	}

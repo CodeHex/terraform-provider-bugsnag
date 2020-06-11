@@ -7,9 +7,15 @@ import (
 )
 
 type APIProject struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Type string `json:"type,omitempty"`
+	ID        string `json:"id,omitempty"`
+	Name      string `json:"name,omitempty"`
+	Type      string `json:"type,omitempty"`
+	APIKey    string `json:"api_key,omitempty"`
+	Slug      string `json:"slug,omitempty"`
+	URL       string `json:"url,omitempty"`
+	HTMLURL   string `json:"html_url,omitempty"`
+	CreatedAt string `json:"created_at,omitempty"`
+	UpdatedAt string `json:"updated_at,omitempty"`
 }
 
 const getProjectPath = "projects/%s"
