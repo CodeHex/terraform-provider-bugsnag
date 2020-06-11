@@ -64,16 +64,6 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 	}
-
-	// The type of project is not available on the API, so assume the state is correct
-	typeData := d.State().Attributes["type"]
-	if typeData == "" {
-		typeData = "other"
-	}
-	err = d.Set("type", typeData)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
