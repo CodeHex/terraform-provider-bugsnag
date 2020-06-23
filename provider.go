@@ -7,7 +7,8 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		ResourcesMap: map[string]*schema.Resource{
-			"bugsnag_project": resourceProject(),
+			"bugsnag_project":      resourceProject(),
+			"bugsnag_collaborator": resourceCollaborator(),
 		},
 		Schema: map[string]*schema.Schema{
 			"auth_token": {

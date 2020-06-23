@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -13,7 +15,7 @@ func resourceProject() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name":       {Type: schema.TypeString, Required: true},
-			"type":       {Type: schema.TypeString, Required: true, ForceNew: true},
+			"type":       {Type: schema.TypeString, Required: true, ValidateFunc: validateType},
 			"api_key":    {Type: schema.TypeString, Computed: true},
 			"slug":       {Type: schema.TypeString, Computed: true},
 			"url":        {Type: schema.TypeString, Computed: true},
@@ -25,6 +27,21 @@ func resourceProject() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 	}
+}
+
+func validateType(val interface{}, key string) (warns []string, err []error) {
+	v := val.(string)
+	isValid := false
+	for _, t := range ValidProjectTypes() {
+		if t == v {
+			isValid = true
+			break
+		}
+	}
+	if !isValid {
+		return nil, []error{fmt.Errorf("unrecognized project type '%s'", v)}
+	}
+	return nil, nil
 }
 
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
@@ -50,6 +67,7 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 
 	fields := map[string]string{
 		"name":       project.Name,
+		"type":       project.Type,
 		"api_key":    project.APIKey,
 		"slug":       project.Slug,
 		"url":        project.URL,
@@ -75,6 +93,9 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 
 	if d.HasChange("name") {
 		project.Name = d.Get("name").(string)
+	}
+	if d.HasChange("type") {
+		project.Type = d.Get("type").(string)
 	}
 	_, err := c.UpdateProject(project)
 	if err != nil {
