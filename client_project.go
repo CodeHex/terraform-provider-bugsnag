@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type APIProject struct {
@@ -20,6 +21,7 @@ type APIProject struct {
 
 const getProjectPath = "projects/%s"
 const createProjectPath = "organizations/%s/projects"
+const listProjects = "organizations/%s/projects"
 
 func (c *Client) GetProject(id string) (*APIProject, error) {
 	var project APIProject
@@ -51,4 +53,30 @@ func (c *Client) UpdateProject(project *APIProject) (*APIProject, error) {
 	var updatedProject APIProject
 	err = c.callAPI(http.MethodPatch, fmt.Sprintf(getProjectPath, project.ID), body, &updatedProject, http.StatusOK)
 	return &updatedProject, err
+}
+
+func (c *Client) ListProjects(query string) ([]APIProject, error) {
+	projects := make([]APIProject, 0)
+	uri, err := url.Parse(fmt.Sprintf(listProjects, c.OrgID))
+	if err != nil {
+		return nil, err
+	}
+	v := url.Values{}
+	v.Set("per_page", "100")
+	if query != "" {
+		v.Set("q", query)
+	}
+	uri.RawQuery = v.Encode()
+	for {
+		projectsPage := make([]APIProject, 0)
+		uri, err = c.callPagedAPI(http.MethodGet, uri.String(), nil, &projectsPage, http.StatusOK)
+		if err != nil {
+			return nil, err
+		}
+		projects = append(projects, projectsPage...)
+		if uri == nil {
+			break
+		}
+	}
+	return projects, err
 }

@@ -6,8 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/tomnomnom/linkheader"
 )
 
 type Client struct {
@@ -20,7 +24,10 @@ func NewClient(token string, orgID string) *Client {
 }
 
 func (c *Client) createRequest(verb string, path string, body []byte) (*http.Request, error) {
-	req, err := http.NewRequest(verb, "https://api.bugsnag.com/"+path, bytes.NewBuffer(body))
+	if !strings.HasPrefix(path, "https://api.bugsnag.com/") {
+		path = "https://api.bugsnag.com/" + path
+	}
+	req, err := http.NewRequest(verb, path, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
@@ -34,9 +41,14 @@ func (c *Client) createRequest(verb string, path string, body []byte) (*http.Req
 }
 
 func (c *Client) callAPI(verb string, path string, body []byte, v interface{}, expCode int) error {
+	_, err := c.callPagedAPI(verb, path, body, v, expCode)
+	return err
+}
+
+func (c *Client) callPagedAPI(verb string, path string, body []byte, v interface{}, expCode int) (*url.URL, error) {
 	req, err := c.createRequest(verb, path, body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	client := &http.Client{}
@@ -45,14 +57,14 @@ func (c *Client) callAPI(verb string, path string, body []byte, v interface{}, e
 	for !success {
 		resp, err = client.Do(req)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode == http.StatusTooManyRequests && resp.Header.Get("Retry-After") != "" {
 			waitSec, err := strconv.Atoi(resp.Header.Get("Retry-After"))
 			if err != nil {
-				return err
+				return nil, err
 			}
 			time.Sleep(time.Duration(waitSec) * time.Second)
 			continue
@@ -62,14 +74,21 @@ func (c *Client) callAPI(verb string, path string, body []byte, v interface{}, e
 
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if resp.StatusCode != expCode {
-		return fmt.Errorf("invalid response code %s for request %s, %s", http.StatusText(resp.StatusCode), path, string(body))
+		return nil, fmt.Errorf("invalid response code %s for request %s, %s", http.StatusText(resp.StatusCode), path, string(body))
 	}
 	if v != nil {
-		return json.Unmarshal(respBody, v)
+		err := json.Unmarshal(respBody, v)
+		if err != nil {
+			return nil, err
+		}
+		links := linkheader.Parse(resp.Header.Get("Link"))
+		if len(links) > 0 && links[0].Rel == "next" {
+			return url.Parse(links[0].URL)
+		}
 	}
-	return nil
+	return nil, nil
 }

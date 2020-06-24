@@ -10,6 +10,9 @@ func Provider() *schema.Provider {
 			"bugsnag_project":      resourceProject(),
 			"bugsnag_collaborator": resourceCollaborator(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"bugsnag_projects": dataSourceProjects(),
+		},
 		Schema: map[string]*schema.Schema{
 			"auth_token": {
 				Type:        schema.TypeString,

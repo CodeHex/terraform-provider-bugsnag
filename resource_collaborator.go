@@ -14,10 +14,12 @@ func resourceCollaborator() *schema.Resource {
 		Delete: resourceCollaboratorDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":     {Type: schema.TypeString, Required: true, ForceNew: true},
-			"email":    {Type: schema.TypeString, Required: true, ForceNew: true},
-			"password": {Type: schema.TypeString, Optional: true, ForceNew: true, Sensitive: true},
-			"admin":    {Type: schema.TypeBool, Optional: true, Default: false},
+			"name":  {Type: schema.TypeString, Required: true, ForceNew: true},
+			"email": {Type: schema.TypeString, Required: true, ForceNew: true},
+			"initial_password": {Type: schema.TypeString, Optional: true, ForceNew: true, Sensitive: true, StateFunc: func(v interface{}) string {
+				return ""
+			}},
+			"admin": {Type: schema.TypeBool, Optional: true, Default: false},
 			"project_ids": {Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{
 				Type: schema.TypeString,
 			}},
@@ -43,7 +45,7 @@ func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Client)
 	projIDs := readProjectIDs(d)
 	name := d.Get("name").(string)
-	password := d.Get("password").(string)
+	password := d.Get("initial_password").(string)
 	admin := d.Get("admin").(bool)
 	if name == "" && password != "" {
 		return errors.New("unable to create collaborator, password is not supported without user name")
@@ -63,6 +65,7 @@ func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(collab.ID)
+	d.Set("initial_password", nil)
 	return resourceCollaboratorRead(d, m)
 }
 
