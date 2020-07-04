@@ -14,16 +14,14 @@ func resourceCollaborator() *schema.Resource {
 		Delete: resourceCollaboratorDelete,
 
 		Schema: map[string]*schema.Schema{
-			"name":  {Type: schema.TypeString, Required: true, ForceNew: true},
+
 			"email": {Type: schema.TypeString, Required: true, ForceNew: true},
-			"initial_password": {Type: schema.TypeString, Optional: true, ForceNew: true, Sensitive: true, StateFunc: func(v interface{}) string {
-				return ""
-			}},
 			"admin": {Type: schema.TypeBool, Optional: true, Default: false},
 			"project_ids": {Type: schema.TypeSet, Optional: true, Elem: &schema.Schema{
 				Type: schema.TypeString,
 			}},
 
+			"name":                     {Type: schema.TypeString, Computed: true},
 			"two_factor_enabled":       {Type: schema.TypeBool, Computed: true},
 			"two_factor_enabled_on":    {Type: schema.TypeString, Computed: true},
 			"recovery_codes_remaining": {Type: schema.TypeInt, Computed: true},
@@ -44,20 +42,13 @@ func resourceCollaborator() *schema.Resource {
 func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Client)
 	projIDs := readProjectIDs(d)
-	name := d.Get("name").(string)
-	password := d.Get("initial_password").(string)
 	admin := d.Get("admin").(bool)
-	if name == "" && password != "" {
-		return errors.New("unable to create collaborator, password is not supported without user name")
-	}
 	if admin && len(projIDs) != 0 {
 		return errors.New("unable to create collaborator, project IDs are not supported when user is admin")
 	}
 	collab := &APICollaborator{
-		Name:       name,
 		Email:      d.Get("email").(string),
-		Password:   password,
-		Admin:      admin,
+		Admin:      &admin,
 		ProjectIDs: projIDs,
 	}
 	collab, err := c.CreateCollaborator(collab)
@@ -65,7 +56,6 @@ func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(collab.ID)
-	d.Set("initial_password", nil)
 	return resourceCollaboratorRead(d, m)
 }
 
@@ -112,13 +102,14 @@ func resourceCollaboratorRead(d *schema.ResourceData, m interface{}) error {
 
 func resourceCollaboratorUpdate(d *schema.ResourceData, m interface{}) error {
 	c := m.(*Client)
+	admin := d.Get("admin").(bool)
 	collaborator := &APICollaborator{
 		ID:         d.Id(),
-		Admin:      d.Get("admin").(bool),
+		Admin:      &admin,
 		ProjectIDs: readProjectIDs(d),
 	}
 
-	if collaborator.Admin && len(collaborator.ProjectIDs) != 0 {
+	if admin && len(collaborator.ProjectIDs) != 0 {
 		return errors.New("unable to update collaborator, project IDs provided on admin user")
 	}
 	_, err := c.UpdateCollaborator(collaborator)

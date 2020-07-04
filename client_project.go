@@ -36,7 +36,7 @@ func (c *Client) CreateProject(project *APIProject) (*APIProject, error) {
 	}
 
 	var createdProject APIProject
-	err = c.callAPI(http.MethodPost, fmt.Sprintf(createProjectPath, c.OrgID), body, &createdProject, http.StatusOK)
+	err = c.callAPI(http.MethodPost, fmt.Sprintf(createProjectPath, c.orgID), body, &createdProject, http.StatusOK)
 	return &createdProject, err
 }
 
@@ -57,7 +57,7 @@ func (c *Client) UpdateProject(project *APIProject) (*APIProject, error) {
 
 func (c *Client) ListProjects(query string) ([]APIProject, error) {
 	projects := make([]APIProject, 0)
-	uri, err := url.Parse(fmt.Sprintf(listProjects, c.OrgID))
+	uri, err := url.Parse(fmt.Sprintf(listProjects, c.orgID))
 	if err != nil {
 		return nil, err
 	}

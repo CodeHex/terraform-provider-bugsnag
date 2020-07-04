@@ -35,7 +35,7 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(c.OrgID)
+	d.SetId(c.orgID)
 	projects := make([]interface{}, 0)
 	for _, apiProject := range apiProjects {
 		project := make(map[string]interface{})

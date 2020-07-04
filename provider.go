@@ -7,6 +7,7 @@ import (
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		ResourcesMap: map[string]*schema.Resource{
+			"bugsnag_current_org":  resourceCurrentOrg(),
 			"bugsnag_project":      resourceProject(),
 			"bugsnag_collaborator": resourceCollaborator(),
 		},
@@ -19,16 +20,9 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("BUGSNAG_DATA_ACCESS_TOKEN", nil),
 			},
-			"org_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
 		},
 		ConfigureFunc: func(data *schema.ResourceData) (interface{}, error) {
-			return NewClient(
-				data.Get("auth_token").(string),
-				data.Get("org_id").(string),
-			), nil
+			return NewClient(data.Get("auth_token").(string))
 		},
 	}
 }

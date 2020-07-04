@@ -10,7 +10,7 @@ type APICollaborator struct {
 	ID                     string   `json:"id,omitempty"`
 	Name                   string   `json:"name,omitempty"`
 	Email                  string   `json:"email,omitempty"`
-	Admin                  bool     `json:"admin,omitempty"`
+	Admin                  *bool    `json:"admin,omitempty"`
 	Password               string   `json:"password,omitempty"`
 	IsAdmin                bool     `json:"is_admin,omitempty"`
 	ProjectIDs             []string `json:"project_ids,omitempty"`
@@ -31,7 +31,7 @@ const createCollaboratorPath = "organizations/%s/collaborators"
 
 func (c *Client) GetCollaborator(id string) (*APICollaborator, error) {
 	var collab APICollaborator
-	err := c.callAPI(http.MethodGet, fmt.Sprintf(collaboratorPath, c.OrgID, id), nil, &collab, http.StatusOK)
+	err := c.callAPI(http.MethodGet, fmt.Sprintf(collaboratorPath, c.orgID, id), nil, &collab, http.StatusOK)
 	return &collab, err
 }
 
@@ -42,12 +42,12 @@ func (c *Client) CreateCollaborator(collab *APICollaborator) (*APICollaborator, 
 	}
 
 	var createdCollab APICollaborator
-	err = c.callAPI(http.MethodPost, fmt.Sprintf(createCollaboratorPath, c.OrgID), body, &createdCollab, http.StatusOK)
+	err = c.callAPI(http.MethodPost, fmt.Sprintf(createCollaboratorPath, c.orgID), body, &createdCollab, http.StatusOK)
 	return &createdCollab, err
 }
 
 func (c *Client) DeleteCollaborator(id string) error {
-	return c.callAPI(http.MethodDelete, fmt.Sprintf(collaboratorPath, c.OrgID, id), nil, nil, http.StatusNoContent)
+	return c.callAPI(http.MethodDelete, fmt.Sprintf(collaboratorPath, c.orgID, id), nil, nil, http.StatusNoContent)
 }
 
 func (c *Client) UpdateCollaborator(collab *APICollaborator) (*APICollaborator, error) {
@@ -57,6 +57,6 @@ func (c *Client) UpdateCollaborator(collab *APICollaborator) (*APICollaborator, 
 	}
 
 	var updatedCollaborator APICollaborator
-	err = c.callAPI(http.MethodPatch, fmt.Sprintf(collaboratorPath, c.OrgID, collab.ID), body, &updatedCollaborator, http.StatusOK)
+	err = c.callAPI(http.MethodPatch, fmt.Sprintf(collaboratorPath, c.orgID, collab.ID), body, &updatedCollaborator, http.StatusOK)
 	return &updatedCollaborator, err
 }

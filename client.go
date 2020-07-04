@@ -16,11 +16,17 @@ import (
 
 type Client struct {
 	authToken string
-	OrgID     string
+	orgID     string
 }
 
-func NewClient(token string, orgID string) *Client {
-	return &Client{authToken: token, OrgID: orgID}
+func NewClient(token string) (*Client, error) {
+	client := &Client{authToken: token}
+	orgID, err := client.GetCurrentOrganization()
+	if err != nil {
+		return nil, err
+	}
+	client.orgID = orgID
+	return client, nil
 }
 
 func (c *Client) createRequest(verb string, path string, body []byte) (*http.Request, error) {
