@@ -1,6 +1,7 @@
-package main
+package bugsnag
 
 import (
+	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -22,7 +23,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ConfigureFunc: func(data *schema.ResourceData) (interface{}, error) {
-			return NewClient(data.Get("auth_token").(string))
+			return api.New(data.Get("auth_token").(string))
 		},
 	}
 }

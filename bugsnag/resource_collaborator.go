@@ -1,8 +1,9 @@
-package main
+package bugsnag
 
 import (
 	"errors"
 
+	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -40,13 +41,13 @@ func resourceCollaborator() *schema.Resource {
 }
 
 func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	projIDs := readProjectIDs(d)
 	admin := d.Get("admin").(bool)
 	if admin && len(projIDs) != 0 {
 		return errors.New("unable to create collaborator, project IDs are not supported when user is admin")
 	}
-	collab := &APICollaborator{
+	collab := &api.Collaborator{
 		Email:      d.Get("email").(string),
 		Admin:      &admin,
 		ProjectIDs: projIDs,
@@ -60,7 +61,7 @@ func resourceCollaboratorCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceCollaboratorRead(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	collaborator, err := c.GetCollaborator(d.Id())
 	if err != nil {
 		return err
@@ -101,9 +102,9 @@ func resourceCollaboratorRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceCollaboratorUpdate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	admin := d.Get("admin").(bool)
-	collaborator := &APICollaborator{
+	collaborator := &api.Collaborator{
 		ID:         d.Id(),
 		Admin:      &admin,
 		ProjectIDs: readProjectIDs(d),
@@ -120,7 +121,7 @@ func resourceCollaboratorUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceCollaboratorDelete(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	return c.DeleteCollaborator(d.Id())
 }
 

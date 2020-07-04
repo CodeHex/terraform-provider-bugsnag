@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"bytes"
@@ -16,16 +16,16 @@ import (
 
 type Client struct {
 	authToken string
-	orgID     string
+	OrgID     string
 }
 
-func NewClient(token string) (*Client, error) {
+func New(token string) (*Client, error) {
 	client := &Client{authToken: token}
 	orgID, err := client.GetCurrentOrganization()
 	if err != nil {
 		return nil, err
 	}
-	client.orgID = orgID
+	client.OrgID = orgID
 	return client, nil
 }
 

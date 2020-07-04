@@ -1,8 +1,9 @@
-package main
+package bugsnag
 
 import (
 	"fmt"
 
+	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -44,8 +45,8 @@ func validateType(val interface{}, key string) (warns []string, err []error) {
 }
 
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
-	project := &APIProject{
+	c := m.(*api.Client)
+	project := &api.Project{
 		Name: d.Get("name").(string),
 		Type: d.Get("type").(string),
 	}
@@ -58,7 +59,7 @@ func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	project, err := c.GetProject(d.Id())
 	if err != nil {
 		return err
@@ -84,8 +85,8 @@ func resourceProjectRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
-	project := &APIProject{
+	c := m.(*api.Client)
+	project := &api.Project{
 		ID: d.Id(),
 	}
 
@@ -103,6 +104,6 @@ func resourceProjectUpdate(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceProjectDelete(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	return c.DeleteProject(d.Id())
 }

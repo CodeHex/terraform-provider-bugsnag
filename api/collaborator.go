@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type APICollaborator struct {
+type Collaborator struct {
 	ID                     string   `json:"id,omitempty"`
 	Name                   string   `json:"name,omitempty"`
 	Email                  string   `json:"email,omitempty"`
@@ -29,34 +29,34 @@ type APICollaborator struct {
 const collaboratorPath = "organizations/%s/collaborators/%s"
 const createCollaboratorPath = "organizations/%s/collaborators"
 
-func (c *Client) GetCollaborator(id string) (*APICollaborator, error) {
-	var collab APICollaborator
-	err := c.callAPI(http.MethodGet, fmt.Sprintf(collaboratorPath, c.orgID, id), nil, &collab, http.StatusOK)
+func (c *Client) GetCollaborator(id string) (*Collaborator, error) {
+	var collab Collaborator
+	err := c.callAPI(http.MethodGet, fmt.Sprintf(collaboratorPath, c.OrgID, id), nil, &collab, http.StatusOK)
 	return &collab, err
 }
 
-func (c *Client) CreateCollaborator(collab *APICollaborator) (*APICollaborator, error) {
+func (c *Client) CreateCollaborator(collab *Collaborator) (*Collaborator, error) {
 	body, err := json.Marshal(collab)
 	if err != nil {
 		return nil, err
 	}
 
-	var createdCollab APICollaborator
-	err = c.callAPI(http.MethodPost, fmt.Sprintf(createCollaboratorPath, c.orgID), body, &createdCollab, http.StatusOK)
+	var createdCollab Collaborator
+	err = c.callAPI(http.MethodPost, fmt.Sprintf(createCollaboratorPath, c.OrgID), body, &createdCollab, http.StatusOK)
 	return &createdCollab, err
 }
 
 func (c *Client) DeleteCollaborator(id string) error {
-	return c.callAPI(http.MethodDelete, fmt.Sprintf(collaboratorPath, c.orgID, id), nil, nil, http.StatusNoContent)
+	return c.callAPI(http.MethodDelete, fmt.Sprintf(collaboratorPath, c.OrgID, id), nil, nil, http.StatusNoContent)
 }
 
-func (c *Client) UpdateCollaborator(collab *APICollaborator) (*APICollaborator, error) {
+func (c *Client) UpdateCollaborator(collab *Collaborator) (*Collaborator, error) {
 	body, err := json.Marshal(collab)
 	if err != nil {
 		return nil, err
 	}
 
-	var updatedCollaborator APICollaborator
-	err = c.callAPI(http.MethodPatch, fmt.Sprintf(collaboratorPath, c.orgID, collab.ID), body, &updatedCollaborator, http.StatusOK)
+	var updatedCollaborator Collaborator
+	err = c.callAPI(http.MethodPatch, fmt.Sprintf(collaboratorPath, c.OrgID, collab.ID), body, &updatedCollaborator, http.StatusOK)
 	return &updatedCollaborator, err
 }

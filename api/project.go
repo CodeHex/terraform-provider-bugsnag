@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 )
 
-type APIProject struct {
+type Project struct {
 	ID        string `json:"id,omitempty"`
 	Name      string `json:"name,omitempty"`
 	Type      string `json:"type,omitempty"`
@@ -23,20 +23,20 @@ const getProjectPath = "projects/%s"
 const createProjectPath = "organizations/%s/projects"
 const listProjects = "organizations/%s/projects"
 
-func (c *Client) GetProject(id string) (*APIProject, error) {
-	var project APIProject
+func (c *Client) GetProject(id string) (*Project, error) {
+	var project Project
 	err := c.callAPI(http.MethodGet, fmt.Sprintf(getProjectPath, id), nil, &project, http.StatusOK)
 	return &project, err
 }
 
-func (c *Client) CreateProject(project *APIProject) (*APIProject, error) {
+func (c *Client) CreateProject(project *Project) (*Project, error) {
 	body, err := json.Marshal(project)
 	if err != nil {
 		return nil, err
 	}
 
-	var createdProject APIProject
-	err = c.callAPI(http.MethodPost, fmt.Sprintf(createProjectPath, c.orgID), body, &createdProject, http.StatusOK)
+	var createdProject Project
+	err = c.callAPI(http.MethodPost, fmt.Sprintf(createProjectPath, c.OrgID), body, &createdProject, http.StatusOK)
 	return &createdProject, err
 }
 
@@ -44,20 +44,20 @@ func (c *Client) DeleteProject(id string) error {
 	return c.callAPI(http.MethodDelete, fmt.Sprintf(getProjectPath, id), nil, nil, http.StatusNoContent)
 }
 
-func (c *Client) UpdateProject(project *APIProject) (*APIProject, error) {
+func (c *Client) UpdateProject(project *Project) (*Project, error) {
 	body, err := json.Marshal(project)
 	if err != nil {
 		return nil, err
 	}
 
-	var updatedProject APIProject
+	var updatedProject Project
 	err = c.callAPI(http.MethodPatch, fmt.Sprintf(getProjectPath, project.ID), body, &updatedProject, http.StatusOK)
 	return &updatedProject, err
 }
 
-func (c *Client) ListProjects(query string) ([]APIProject, error) {
-	projects := make([]APIProject, 0)
-	uri, err := url.Parse(fmt.Sprintf(listProjects, c.orgID))
+func (c *Client) ListProjects(query string) ([]Project, error) {
+	projects := make([]Project, 0)
+	uri, err := url.Parse(fmt.Sprintf(listProjects, c.OrgID))
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *Client) ListProjects(query string) ([]APIProject, error) {
 	}
 	uri.RawQuery = v.Encode()
 	for {
-		projectsPage := make([]APIProject, 0)
+		projectsPage := make([]Project, 0)
 		uri, err = c.callPagedAPI(http.MethodGet, uri.String(), nil, &projectsPage, http.StatusOK)
 		if err != nil {
 			return nil, err
