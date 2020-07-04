@@ -25,7 +25,6 @@ type Organization struct {
 
 const orgsPath = "user/organizations"
 const orgIDPath = "organizations/%s"
-const orgPath = "organizations"
 
 func (c *Client) GetCurrentOrganization() (string, error) {
 	var orgs []Organization
