@@ -2,7 +2,6 @@ package bugsnag
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -34,15 +33,20 @@ func resourceCurrentOrg() *schema.Resource {
 			"updated_at": {Type: schema.TypeString, Computed: true},
 		},
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: importCurrentOrg,
 		},
 	}
 }
 
+func importCurrentOrg(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+	c := m.(*api.Client)
+	d.SetId(c.OrgID)
+	return []*schema.ResourceData{d}, nil
+}
+
 // Note this is currently restricted to user authentication only
 func resourceCurrentOrgCreate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*api.Client)
-	return fmt.Errorf("current organization must be imported, please run `terraform import bugsnag_current_org.<resource_name> %s`", c.OrgID)
+	return errors.New("current organization must be imported, please run `terraform import bugsnag_current_org.<resource_name> \"\"`")
 }
 
 func resourceCurrentOrgRead(d *schema.ResourceData, m interface{}) error {
