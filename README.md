@@ -157,7 +157,7 @@ resource "bugsnag_collaborator" "example_admin" {
 #### Arguments Reference
 - `email` (Required) - The email address of the collaborator
 - `admin` (Optional) - Set to `true` if the collaborator should have admin access to the organization. Defaults to `false`. The `project_ids` field must be blank if admin is set to `true`
-- `project_ids (Optional) - A list of project IDs the collaborator should have access to. Should only be provided when admin is set to `false`
+- `project_ids` (Optional) - A list of project IDs the collaborator should have access to. Should only be provided when admin is set to `false`
 #### Attributes Reference
 - `name` - The name of the collaborator
 - `two_factor_enabled` - Set to `true` if 2FA has is enabled for this user
