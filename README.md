@@ -30,11 +30,12 @@ provider "bugsnag" {
 ## Data Sources
 ### bugsnag_projects
 Use this data source to provide a list of projects that can be accessed, using an optional search query
+
 #### Example Usage
  ```HCL
 data "bugsnag_projects" "example" {
-  query = "Website"
-  sort = "name"
+  query     = "Website"
+  sort      = "name"
   direction = "asc"
 }
  ```
@@ -42,6 +43,7 @@ data "bugsnag_projects" "example" {
 - `query` - (Optional) Filter the projects with names matching this query value. Defaults to no filtering.
 - `sort` - (Optional) Sort the projects by either `created_at`, `name` or `favorite`. Defaults to `created_at`
 - `direction` - (Optional) Which direction to sort the projects, either `asc` or `desc`. Defaults to `asc` when sorting by favorite, `desc` otherwise.
+
 #### Attributes Reference
 - `id` - The ID of the project (e.g. `5ed73feb00002b509b040000`)
 - `name` - The name of the project (e.g. `Website Frontend`)
