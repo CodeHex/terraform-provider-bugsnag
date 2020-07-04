@@ -1,4 +1,4 @@
-package main
+package bugsnag
 
 func ValidProjectTypes() []string {
 	return []string{

@@ -1,6 +1,7 @@
-package main
+package bugsnag
 
 import (
+	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -29,13 +30,13 @@ func dataSourceProjects() *schema.Resource {
 }
 
 func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 
 	apiProjects, err := c.ListProjects(d.Get("query").(string))
 	if err != nil {
 		return err
 	}
-	d.SetId(c.orgID)
+	d.SetId(c.OrgID)
 	projects := make([]interface{}, 0)
 	for _, apiProject := range apiProjects {
 		project := make(map[string]interface{})

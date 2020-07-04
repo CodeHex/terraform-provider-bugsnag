@@ -1,9 +1,10 @@
-package main
+package bugsnag
 
 import (
 	"errors"
 	"fmt"
 
+	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
 
@@ -40,12 +41,12 @@ func resourceCurrentOrg() *schema.Resource {
 
 // Note this is currently restricted to user authentication only
 func resourceCurrentOrgCreate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
-	return fmt.Errorf("current organization must be imported, please run `terraform import bugsnag_current_org.<resource_name> %s`", c.orgID)
+	c := m.(*api.Client)
+	return fmt.Errorf("current organization must be imported, please run `terraform import bugsnag_current_org.<resource_name> %s`", c.OrgID)
 }
 
 func resourceCurrentOrgRead(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
+	c := m.(*api.Client)
 	org, err := c.GetOrganization()
 	if err != nil {
 		return err
@@ -88,8 +89,8 @@ func resourceCurrentOrgRead(d *schema.ResourceData, m interface{}) error {
 }
 
 func resourceCurrentOrgUpdate(d *schema.ResourceData, m interface{}) error {
-	c := m.(*Client)
-	org := &APIOrganization{
+	c := m.(*api.Client)
+	org := &api.Organization{
 		ID: d.Id(),
 	}
 

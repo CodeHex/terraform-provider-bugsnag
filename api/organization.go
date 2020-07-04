@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/json"
@@ -6,21 +6,21 @@ import (
 	"net/http"
 )
 
-type APIOrgCreator struct {
+type OrgCreator struct {
 	Email string `json:"email,omitempty"`
 	ID    string `json:"id,omitempty"`
 	Name  string `json:"name,omitempty"`
 }
 
-type APIOrganization struct {
-	ID            string         `json:"id,omitempty"`
-	Name          string         `json:"name,omitempty"`
-	BillingEmails []string       `json:"billing_emails,omitempty"`
-	AutoUpgrade   *bool          `json:"auto_upgrade,omitempty"`
-	Slug          string         `json:"slug,omitempty"`
-	Creator       *APIOrgCreator `json:"creator,omitempty"`
-	CreatedAt     string         `json:"created_at,omitempty"`
-	UpdatedAt     string         `json:"updated_at,omitempty"`
+type Organization struct {
+	ID            string      `json:"id,omitempty"`
+	Name          string      `json:"name,omitempty"`
+	BillingEmails []string    `json:"billing_emails,omitempty"`
+	AutoUpgrade   *bool       `json:"auto_upgrade,omitempty"`
+	Slug          string      `json:"slug,omitempty"`
+	Creator       *OrgCreator `json:"creator,omitempty"`
+	CreatedAt     string      `json:"created_at,omitempty"`
+	UpdatedAt     string      `json:"updated_at,omitempty"`
 }
 
 const orgsPath = "user/organizations"
@@ -28,7 +28,7 @@ const orgIDPath = "organizations/%s"
 const orgPath = "organizations"
 
 func (c *Client) GetCurrentOrganization() (string, error) {
-	var orgs []APIOrganization
+	var orgs []Organization
 	err := c.callAPI(http.MethodGet, orgsPath, nil, &orgs, http.StatusOK)
 	if err != nil {
 		return "", err
@@ -41,19 +41,19 @@ func (c *Client) GetCurrentOrganization() (string, error) {
 	return orgs[0].ID, nil
 }
 
-func (c *Client) GetOrganization() (*APIOrganization, error) {
-	var org APIOrganization
-	err := c.callAPI(http.MethodGet, fmt.Sprintf(orgIDPath, c.orgID), nil, &org, http.StatusOK)
+func (c *Client) GetOrganization() (*Organization, error) {
+	var org Organization
+	err := c.callAPI(http.MethodGet, fmt.Sprintf(orgIDPath, c.OrgID), nil, &org, http.StatusOK)
 	return &org, err
 }
 
-func (c *Client) UpdateOrganization(org *APIOrganization) (*APIOrganization, error) {
+func (c *Client) UpdateOrganization(org *Organization) (*Organization, error) {
 	body, err := json.Marshal(org)
 	if err != nil {
 		return nil, err
 	}
 
-	var updatedOrg APIOrganization
+	var updatedOrg Organization
 	err = c.callAPI(http.MethodPatch, fmt.Sprintf(orgIDPath, org.ID), body, &updatedOrg, http.StatusOK)
 	return &updatedOrg, err
 }
