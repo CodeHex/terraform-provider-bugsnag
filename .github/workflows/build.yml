@@ -1,7 +1,7 @@
-name: CI
+name: build
 on: push
 jobs:
-  build:
+  lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
