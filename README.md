@@ -23,8 +23,6 @@ Coming Soon...
 
 For examples... (comming soon)
 
----
-
 ## Bugsnag Provider
 The Bugsnag provider is used to interact with Bugsnag organization related resources.
 
@@ -40,8 +38,6 @@ provider "bugsnag" {
  ```
 #### Argument Reference
 - `auth_token` - (Required) This is the Bugsnag personal auth token. It can also be provided from the `BUGSNAG_DATA_ACCESS_TOKEN` environment variable.
-
----
 
 ## Data Sources
 ### bugsnag_projects
@@ -64,8 +60,6 @@ data "bugsnag_projects" "example" {
 - `id` - The ID of the project (e.g. `5ed73feb00002b509b040000`)
 - `name` - The name of the project (e.g. `Website Frontend`)
 - `api_key` - The API key for the project (e.g. `86925ec410def315d6d2bffd91f51da1`)
-
----
 
 ## Resources
 ### bugsnag_current_org
@@ -102,8 +96,6 @@ resource "bugsnag_current_org" "example" {
 - `created_at` - The date and time the organization was created (e.g. `2017-04-24T22:17:13.000Z`)
 - `updated_at` - The date and time the organization was last updated at (e.g. `2017-04-24T22:17:13.000Z`)
 
----
-
 ### bugsnag_project
 This resource allows you to create and manage projects within your Bugsnag organizations.
 
@@ -125,8 +117,6 @@ resource "bugsnag_project" "example" {
 - `html_url` - The URL to the Bugsnag dashboard for this project (e.g. `https://app.bugsnag.com/example-org/example-ios-app`)
 - `created_at` - The date and time the project was created (e.g. `2017-04-24T22:17:13.000Z`)
 - `updated_at` - The date and time the project was last updated at (e.g. `2017-04-24T22:17:13.000Z`)
-
----
 
 ### bugsnag_collaborator
 This resource allows you to invite and manage collaborators.
@@ -170,4 +160,3 @@ resource "bugsnag_collaborator" "example_admin" {
 - `last_request_at`- The last time the user interacted with the Bugsnag dashboard or related APIs. This is not set if the user has not interacted with the dashboard before (e.g. `2017-04-24T22:17:13.000Z)
 - `paid_for` - Set to `true` if the user has Bugsnag dashboard access under the organization's current plan. If this is `false` for a collaborator, they will see a "locked out" message when they attempt to log in to the Bugsnag dashboard
 
----
