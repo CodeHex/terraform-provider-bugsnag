@@ -38,14 +38,12 @@ func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	}
 	d.SetId(c.OrgID)
 	projects := make([]interface{}, 0)
-	for _, apiProject := range apiProjects {
+	for i := range apiProjects {
 		project := make(map[string]interface{})
-		project["id"] = apiProject.ID
-		project["name"] = apiProject.Name
-		project["api_key"] = apiProject.APIKey
+		project["id"] = apiProjects[i].ID
+		project["name"] = apiProjects[i].Name
+		project["api_key"] = apiProjects[i].APIKey
 		projects = append(projects, project)
 	}
-
-	d.Set("project", projects)
-	return nil
+	return d.Set("project", projects)
 }
