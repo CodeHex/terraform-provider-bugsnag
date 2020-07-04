@@ -168,6 +168,6 @@ resource "bugsnag_collaborator" "example_admin" {
 - `created_at` - The date and time the project was created (e.g. `2017-04-24T22:17:13.000Z`)
 - `pending_invitation` - Set to `true` if the user has not yet accepted their Bugsnag invitation
 - `last_request_at`- The last time the user interacted with the Bugsnag dashboard or related APIs. This is not set if the user has not interacted with the dashboard before (e.g. `2017-04-24T22:17:13.000Z)
-- `paid_for` - Set to `true if the user has Bugsnag dashboard access under the organization's current plan. If this is `false` for a collaborator, they will see a "locked out" message when they attempt to log in to the Bugsnag dashboard
+- `paid_for` - Set to `true` if the user has Bugsnag dashboard access under the organization's current plan. If this is `false` for a collaborator, they will see a "locked out" message when they attempt to log in to the Bugsnag dashboard
 
 ---
