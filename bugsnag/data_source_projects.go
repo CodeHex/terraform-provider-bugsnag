@@ -14,6 +14,16 @@ func dataSourceProjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"sort": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateValueFunc([]string{"created_at", "name", "favorite", ""}),
+			},
+			"direction": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateValueFunc([]string{"asc", "desc", ""}),
+			},
 			"project": {
 				Type:     schema.TypeList,
 				Computed: true,
@@ -32,7 +42,11 @@ func dataSourceProjects() *schema.Resource {
 func dataSourceProjectsRead(d *schema.ResourceData, m interface{}) error {
 	c := m.(*api.Client)
 
-	apiProjects, err := c.ListProjects(d.Get("query").(string))
+	apiProjects, err := c.ListProjects(
+		d.Get("query").(string),
+		d.Get("sort").(string),
+		d.Get("direction").(string),
+	)
 	if err != nil {
 		return err
 	}
