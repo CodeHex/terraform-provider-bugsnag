@@ -1,8 +1,6 @@
 package bugsnag
 
 import (
-	"fmt"
-
 	"github.com/codehex/terraform-provider-bugsnag/api"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -16,7 +14,7 @@ func resourceProject() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name":       {Type: schema.TypeString, Required: true},
-			"type":       {Type: schema.TypeString, Required: true, ValidateFunc: validateType},
+			"type":       {Type: schema.TypeString, Required: true, ValidateFunc: validateValueFunc(validProjectTypes())},
 			"api_key":    {Type: schema.TypeString, Computed: true},
 			"slug":       {Type: schema.TypeString, Computed: true},
 			"html_url":   {Type: schema.TypeString, Computed: true},
@@ -27,21 +25,6 @@ func resourceProject() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 	}
-}
-
-func validateType(val interface{}, key string) (warns []string, err []error) {
-	v := val.(string)
-	isValid := false
-	for _, t := range ValidProjectTypes() {
-		if t == v {
-			isValid = true
-			break
-		}
-	}
-	if !isValid {
-		return nil, []error{fmt.Errorf("unrecognized project type '%s'", v)}
-	}
-	return nil, nil
 }
 
 func resourceProjectCreate(d *schema.ResourceData, m interface{}) error {

@@ -19,7 +19,6 @@ type Collaborator struct {
 	RecoveryCodesRemaining int      `json:"recovery_codes_remaining,omitempty"`
 	PasswordUpdatedOn      string   `json:"password_updated_on,omitempty"`
 	ShowTimeInUTC          bool     `json:"show_time_in_utc,omitempty"`
-	Heroku                 bool     `json:"heroku,omitempty"`
 	CreatedAt              string   `json:"created_at,omitempty"`
 	PendingInvitation      bool     `json:"pending_invitation,omitempty"`
 	LastRequestAt          string   `json:"last_request_at,omitempty"`

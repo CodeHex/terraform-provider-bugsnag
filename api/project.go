@@ -55,7 +55,7 @@ func (c *Client) UpdateProject(project *Project) (*Project, error) {
 	return &updatedProject, err
 }
 
-func (c *Client) ListProjects(query string) ([]Project, error) {
+func (c *Client) ListProjects(query string, sort string, direction string) ([]Project, error) {
 	projects := make([]Project, 0)
 	uri, err := url.Parse(fmt.Sprintf(listProjects, c.OrgID))
 	if err != nil {
@@ -65,6 +65,12 @@ func (c *Client) ListProjects(query string) ([]Project, error) {
 	v.Set("per_page", "100")
 	if query != "" {
 		v.Set("q", query)
+	}
+	if sort != "" {
+		v.Set("sort", sort)
+	}
+	if direction != "" {
+		v.Set("direction", direction)
 	}
 	uri.RawQuery = v.Encode()
 	for {

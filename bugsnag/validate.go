@@ -1,6 +1,25 @@
 package bugsnag
 
-func ValidProjectTypes() []string {
+import "fmt"
+
+func validateValueFunc(validValues []string) func(val interface{}, key string) (warns []string, err []error) {
+	return func(val interface{}, key string) (warns []string, err []error) {
+		v := val.(string)
+		isValid := false
+		for _, t := range validValues {
+			if t == v {
+				isValid = true
+				break
+			}
+		}
+		if !isValid {
+			return nil, []error{fmt.Errorf("unrecognized value '%s'", v)}
+		}
+		return nil, nil
+	}
+}
+
+func validProjectTypes() []string {
 	return []string{
 		"rails",
 		"django",
