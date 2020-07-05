@@ -10,7 +10,7 @@ Requires [Terraform 0.12.x](https://www.terraform.io/downloads.html)
 
 ## Installing
 
-Clone the repo and build the binary (requires [Go](https://golang.org/doc/install) +1.14 to build the provider plugin)
+Clone the repo and build the binary (requires [Go](https://golang.org/doc/install) +1.14)
 ```bash
 go build -o terraform-provider-bugsnag
 ```
