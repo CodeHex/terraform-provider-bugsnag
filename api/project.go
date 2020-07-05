@@ -7,6 +7,7 @@ import (
 	"net/url"
 )
 
+// Project defines the details of a Bugsnag project as provided by the Bugsnag data access API.
 type Project struct {
 	ID        string `json:"id,omitempty"`
 	Name      string `json:"name,omitempty"`
@@ -23,12 +24,14 @@ const getProjectPath = "projects/%s"
 const createProjectPath = "organizations/%s/projects"
 const listProjects = "organizations/%s/projects"
 
+// GetProject returns a specific project using the provided project ID
 func (c *Client) GetProject(id string) (*Project, error) {
 	var project Project
 	err := c.callAPI(http.MethodGet, fmt.Sprintf(getProjectPath, id), nil, &project, http.StatusOK)
 	return &project, err
 }
 
+// CreateProject creates a new project in organization
 func (c *Client) CreateProject(project *Project) (*Project, error) {
 	body, err := json.Marshal(project)
 	if err != nil {
@@ -40,10 +43,12 @@ func (c *Client) CreateProject(project *Project) (*Project, error) {
 	return &createdProject, err
 }
 
+// DeleteProject deletes a project in the organization
 func (c *Client) DeleteProject(id string) error {
 	return c.callAPI(http.MethodDelete, fmt.Sprintf(getProjectPath, id), nil, nil, http.StatusNoContent)
 }
 
+// UpdateProject updates a project in the organization
 func (c *Client) UpdateProject(project *Project) (*Project, error) {
 	body, err := json.Marshal(project)
 	if err != nil {
@@ -55,6 +60,8 @@ func (c *Client) UpdateProject(project *Project) (*Project, error) {
 	return &updatedProject, err
 }
 
+// ListProjects provides a list of projects in the organization. A query string can be provided to narrow down the
+// list of projects based on project name. The list can be sorted.
 func (c *Client) ListProjects(query string, sort string, direction string) ([]Project, error) {
 	projects := make([]Project, 0)
 	uri, err := url.Parse(fmt.Sprintf(listProjects, c.OrgID))

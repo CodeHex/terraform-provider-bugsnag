@@ -6,12 +6,14 @@ import (
 	"net/http"
 )
 
+// OrgCreator defines details about the creator of the organization
 type OrgCreator struct {
 	Email string `json:"email,omitempty"`
 	ID    string `json:"id,omitempty"`
 	Name  string `json:"name,omitempty"`
 }
 
+// Organization defines the details of a Bugsnag organization as provided by the Bugsnag data access API
 type Organization struct {
 	ID            string      `json:"id,omitempty"`
 	Name          string      `json:"name,omitempty"`
@@ -26,6 +28,7 @@ type Organization struct {
 const orgsPath = "user/organizations"
 const orgIDPath = "organizations/%s"
 
+// GetCurrentOrganization returns the ID of the organization associated with the configured data access token
 func (c *Client) GetCurrentOrganization() (string, error) {
 	var orgs []Organization
 	err := c.callAPI(http.MethodGet, orgsPath, nil, &orgs, http.StatusOK)
@@ -40,12 +43,14 @@ func (c *Client) GetCurrentOrganization() (string, error) {
 	return orgs[0].ID, nil
 }
 
+// GetOrganization returns the organization associated with the configured data access token
 func (c *Client) GetOrganization() (*Organization, error) {
 	var org Organization
 	err := c.callAPI(http.MethodGet, fmt.Sprintf(orgIDPath, c.OrgID), nil, &org, http.StatusOK)
 	return &org, err
 }
 
+// UpdateOrganization updates organization settings associated with the configured data access token
 func (c *Client) UpdateOrganization(org *Organization) (*Organization, error) {
 	body, err := json.Marshal(org)
 	if err != nil {
