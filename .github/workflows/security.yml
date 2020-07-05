@@ -1,5 +1,5 @@
 name: Security
-on: [push, pull_request]
+on: push
 jobs:
   gosec:
     runs-on: ubuntu-latest
