@@ -17,13 +17,14 @@ import (
 // Client defines the HTTP client used communicate with the Bugsnag data access API. The client
 // is restricted to single organization. See https://bugsnagapiv2.docs.apiary.io for more details
 type Client struct {
+	endPoint  string
 	authToken string
 	OrgID     string
 }
 
 // New creates a new Bugsnag data access API client
-func New(token string) (*Client, error) {
-	client := &Client{authToken: token}
+func New(token string, endPoint string) (*Client, error) {
+	client := &Client{authToken: token, endPoint: endPoint}
 	orgID, err := client.GetCurrentOrganization()
 	if err != nil {
 		return nil, err
@@ -33,8 +34,8 @@ func New(token string) (*Client, error) {
 }
 
 func (c *Client) createRequest(verb string, path string, body []byte) (*http.Request, error) {
-	if !strings.HasPrefix(path, "https://api.bugsnag.com/") {
-		path = "https://api.bugsnag.com/" + path
+	if !strings.HasPrefix(path, c.endPoint) {
+		path = c.endPoint + "/" + path
 	}
 	req, err := http.NewRequest(verb, path, bytes.NewBuffer(body))
 	if err != nil {
