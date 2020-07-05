@@ -22,9 +22,17 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("BUGSNAG_DATA_ACCESS_TOKEN", nil),
 			},
+			"api_endpoint": {
+				Type:        schema.TypeString,
+				Required:    true,
+				DefaultFunc: schema.EnvDefaultFunc("BUGSNAG_API_ENDPOINT", "https://api.bugsnag.com"),
+			},
 		},
 		ConfigureFunc: func(data *schema.ResourceData) (interface{}, error) {
-			return api.New(data.Get("auth_token").(string))
+			return api.New(
+				data.Get("auth_token").(string),
+				data.Get("api_endpoint").(string),
+			)
 		},
 	}
 }

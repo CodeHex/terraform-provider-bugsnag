@@ -53,5 +53,12 @@ linters:
     - whitespace
     - gochecknoglobals
 
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gochecknoglobals
+        - gochecknoinits
+
 service:
   golangci-lint-version: 1.27.x # use the fixed version to not introduce new linters unexpectedly
