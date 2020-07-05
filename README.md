@@ -3,6 +3,7 @@
 ![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/lint/badge.svg?branch=master)
 ![gosec](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/gosec/badge.svg?branch=master)
 [![Go Report](https://goreportcard.com/badge/github.com/codehex/terraform-provider-bugsnag)](https://goreportcard.com/report/codehex/terraform-provider-bugsnag)
+[![Latest Version](https://img.shields.io/github/v/release/codehex/terraform-provider-bugsnag?include_prereleases)](https://github.com/codehex/terraform-provider-bugsnag/releases)
 
 Provides management of organizations, projects and collaborators using personal access tokens.
 
