@@ -1,8 +1,7 @@
-name: build
-on: push
+name: Linter
+on: [push, pull_request]
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
