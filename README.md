@@ -1,7 +1,7 @@
 # Terraform Provider For Bugsnag
 
-![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/Linter/badge.svg?branch=master)
-![gosec](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/Security/badge.svg?branch=master)
+![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/lint/badge.svg?branch=master)
+![gosec](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/gosec/badge.svg?branch=master)
 [![Go Report](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)
 
 Provides management of organizations, projects and collaborators using personal access tokens.
