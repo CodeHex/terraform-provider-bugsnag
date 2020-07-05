@@ -14,11 +14,14 @@ import (
 	"github.com/tomnomnom/linkheader"
 )
 
+// Client defines the HTTP client used communicate with the Bugsnag data access API. The client
+// is restricted to single organization. See https://bugsnagapiv2.docs.apiary.io for more details
 type Client struct {
 	authToken string
 	OrgID     string
 }
 
+// New creates a new Bugsnag data access API client
 func New(token string) (*Client, error) {
 	client := &Client{authToken: token}
 	orgID, err := client.GetCurrentOrganization()
