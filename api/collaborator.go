@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// Collaborator defines the details of a Bugsnag collaborator as provided by the Bugsnag data access api.
+// Collaborator defines the details of a Bugsnag collaborator as provided by the Bugsnag data access API.
 type Collaborator struct {
 	ID                     string   `json:"id,omitempty"`
 	Name                   string   `json:"name,omitempty"`
