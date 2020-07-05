@@ -2,7 +2,7 @@
 
 ![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/lint/badge.svg?branch=master)
 ![gosec](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/gosec/badge.svg?branch=master)
-[![Go Report](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)
+[![Go Report](https://goreportcard.com/badge/github.com/codehex/terraform-provider-bugsnag)](https://goreportcard.com/report/codehex/terraform-provider-bugsnag)
 
 Provides management of organizations, projects and collaborators using personal access tokens.
 
