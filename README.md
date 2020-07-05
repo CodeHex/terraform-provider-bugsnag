@@ -1,6 +1,7 @@
 # Terraform Provider For Bugsnag
 
-![build](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/build/badge.svg?branch=master)
+![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/Linter/badge.svg?branch=master)
+![gosec](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/Security/badge.svg?branch=master)
 [![Go Report](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)](https://goreportcard.com/badge/codehex/terraform-provider-bugsnag)
 
 Provides management of organizations, projects and collaborators using personal access tokens.
@@ -9,7 +10,13 @@ Requires [Terraform 0.12.x](https://www.terraform.io/downloads.html)
 
 ## Installing
 
-Coming Soon...
+Clone the repo and build the binary (requires [Go](https://golang.org/doc/install) +1.14 to build the provider plugin)
+```bash
+go build -o terraform-provider-bugsnag
+```
+Install the plugin by copying the binary to your plugin directory. See [Terraform - Third party plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins) for details about where to copy the binary. More details about how plugins are discovered can be found [here](https://www.terraform.io/docs/extend/how-terraform-works.html#discovery).
+
+To install the plugin locally, copy the `terraform-provider-bugsnag` executable to your running folder and re-run `terraform init` to make terraform aware of your local provider executable.
 
 ## Documentation
 

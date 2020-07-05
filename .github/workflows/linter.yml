@@ -1,11 +1,11 @@
-name: build
+name: Linter
 on: push
 jobs:
   lint:
-    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Source
+        uses: actions/checkout@v2
       - name: Run Linter
         uses: golangci/golangci-lint-action@v1
         with:
