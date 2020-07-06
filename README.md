@@ -1,4 +1,4 @@
-# Terraform Provider For Bugsnag
+# Terraform Provider For Bugsnag (unoffical) [WIP]
 
 [![tests](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/tests/badge.svg?branch=master)](https://github.com/CodeHex/terraform-provider-bugsnag/actions?query=workflow%3Atests+branch%3Amaster)
 [![lint](https://github.com/CodeHex/terraform-provider-bugsnag/workflows/lint/badge.svg?branch=master)](https://github.com/CodeHex/terraform-provider-bugsnag/actions?query=workflow%3Alint+branch%3Amaster)
