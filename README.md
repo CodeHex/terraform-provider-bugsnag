@@ -30,7 +30,7 @@ To install the plugin locally, copy the `terraform-provider-bugsnag` executable 
   - [bugsnag_project](#bugsnag_project)
   - [bugsnag_collaborator](#bugsnag_collaborator)
 
-For examples... (comming soon)
+For examples... (coming soon)
 
 ## Bugsnag Provider
 The Bugsnag provider is used to interact with Bugsnag organization related resources.
