@@ -3,6 +3,6 @@ module github.com/codehex/terraform-provider-bugsnag
 go 1.14
 
 require (
-	github.com/hashicorp/terraform-plugin-sdk v1.15.0
+	github.com/hashicorp/terraform-plugin-sdk v1.17.1
 	github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80
 )
