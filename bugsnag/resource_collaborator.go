@@ -125,9 +125,9 @@ func resourceCollaboratorDelete(d *schema.ResourceData, m interface{}) error {
 
 func readProjectIDs(d *schema.ResourceData) []string {
 	projIDSet := d.Get("project_ids").(*schema.Set)
-	var projIDs []string
-	for _, val := range projIDSet.List() {
-		projIDs = append(projIDs, val.(string))
+	projIDs := make([]string, len(projIDSet.List()))
+	for i, val := range projIDSet.List() {
+		projIDs[i] = val.(string)
 	}
 	return projIDs
 }

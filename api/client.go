@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -62,27 +62,18 @@ func (c *Client) callPagedAPI(verb string, path string, body []byte, v interface
 	}
 
 	client := &http.Client{}
-	success := false
 	var resp *http.Response
+	success := false
 	for !success {
-		resp, err = client.Do(req)
+		resp, err = c.attemptCall(client, req)
 		if err != nil {
 			return nil, err
 		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode == http.StatusTooManyRequests && resp.Header.Get("Retry-After") != "" {
-			waitSec, err := strconv.Atoi(resp.Header.Get("Retry-After"))
-			if err != nil {
-				return nil, err
-			}
-			time.Sleep(time.Duration(waitSec) * time.Second)
-			continue
-		}
-		success = true
+		success = resp != nil
 	}
+	defer resp.Body.Close()
 
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -101,4 +92,23 @@ func (c *Client) callPagedAPI(verb string, path string, body []byte, v interface
 		}
 	}
 	return nil, nil
+}
+
+func (c *Client) attemptCall(client *http.Client, req *http.Request) (*http.Response, error) {
+	var err error
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode == http.StatusTooManyRequests && resp.Header.Get("Retry-After") != "" {
+		resp.Body.Close()
+		waitSec, err := strconv.Atoi(resp.Header.Get("Retry-After"))
+		if err != nil {
+			return nil, err
+		}
+		time.Sleep(time.Duration(waitSec) * time.Second)
+		return nil, nil
+	}
+	return resp, nil
 }
